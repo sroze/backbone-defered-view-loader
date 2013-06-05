@@ -37,6 +37,7 @@
                     queue[i].dfd.resolveWith(queue[i].context, [data]);
                 }
             }
+            this.queues[name] = new Array();
         },
         
         notLoading: function (name) {
@@ -74,7 +75,6 @@
                     var url = Backbone.TemplateManager.baseUrl.replace('{name}', name);
                 
                     // Start template loading
-                    if (console) console.log('Loading template: '+name+' ('+url+')');
                     $.get(url, function (data) {
                         // Compute template
                         var template = _.template(data);
@@ -104,6 +104,7 @@
         deferedRender: function(event) {
             // Fetch the template from the TemplateManager and when complete 
             // call the normal render method
+            var tn = this.templateName;
             var render = $.when(
                 Backbone.TemplateManager.get(this.templateName, this)
             ).then(function(resultTemplate){
@@ -139,8 +140,9 @@
             }
             
             Backbone.TemplateManager.currentViews[container] = this;
-            $(container).html(this.deferedRender(event).el);
             this.isLoaded(false);
+            
+            $(container).html(this.deferedRender(event).el);
             
             return this;
         },
