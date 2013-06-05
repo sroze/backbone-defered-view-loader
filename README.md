@@ -24,14 +24,15 @@ It is using a jQuery defered object to load them and call-back the rendering pro
 It adds 5 functions to the backbone default view:
 - `deferedRender` which start the rendering process.
 - `renderTo(container)` which start the rendering process in a specific container. *Recommended* because when you `renderTo` another view to this `container`, the previous view is `close()`ed.
-- `isLoaded(loaded)` which is used to set the loading state. You can use it to add/remove a "loading" class for instance to the current element.
+- `isLoaded(loaded)` which is used to increase or dicrease the loading count (see `loadedCountDown` attribute). The default behaviour is to add a "loading" class to the current element if loading count is greater than 0 and remove class "loading" when it is 0.
 - `close` which is used to close (remove view) and call `onClose` function (that you may implements to unbind some models)
 - `getHelpers` returns an object with 2 helpers: `displaySize(bytes)` and `displayDate(unixtimestamp)`
 
-The template name is set by the `templateName` attribute.
+There's also two attributes:
+- `templateName` which set the template name.
+- `loadedCountDown` which set the loading count. `isLoaded(true)` must be called `loadedCountDown` times to set that the view is loaded. The default value is 1, you may change it to wait model loading.
 
 ### View example
-
 
 
 ```javascript
@@ -40,26 +41,12 @@ var ListItemView = Backbone.DeferedView.extend({
     tagName:'div',
     templateName: "browser-list",
     className: 'row-fluid',
-    
-    // Use to have a loading state also with model
-    synched: false,
-    templateLoaded: false,
+    loadedCountDown: 2,
   
     initialize:function () {
         this.model.bind("sync", function () {
-            this.synched = true;
-      	    this.isLoaded(undefined);
+      	    this.isLoaded(true);
         }, this);
-    },
-    
-    // Intercept isLoaded function to call super (which just add or remove "loading" class)
-    // only if template is loaded AND model synchronized
-    isLoaded: function (loaded) {
-        if (loaded != undefined) {
-      	  this.templateLoaded = loaded;
-        }
-        
-        Backbone.DeferedView.prototype.isLoaded.apply(this, [this.templateLoaded && this.synched]);
     },
     
     render: function () {

@@ -100,6 +100,7 @@
     Backbone.DeferedView = Backbone.View.extend({
         templateName: null,
         container: null,
+        loadedCountDown: 1,
         
         deferedRender: function(event) {
             // Fetch the template from the TemplateManager and when complete 
@@ -148,7 +149,9 @@
         },
         
         isLoaded: function (loaded) {
-            if (!loaded) {
+            this.loadedCountDown += (loaded ? -1 : 1);
+            
+            if (this.loadedCountDown > 0) {
                 $(this.el).addClass('loading');
             } else {
                 $(this.el).removeClass('loading');
