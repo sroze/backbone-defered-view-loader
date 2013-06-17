@@ -149,16 +149,16 @@
         },
         
         isLoaded: function (loaded) {
-            if (loaded == undefined) {
-        	return this.loadedCountDown == 0;
+            if (loaded != undefined) {
+                this.loadedCountDown += (loaded ? -1 : 1);
+                if (this.loadedCountDown > 0) {
+                    $(this.el).addClass('loading');
+                } else {
+                    $(this.el).removeClass('loading');
+                }
             }
             
-            this.loadedCountDown += (loaded ? -1 : 1);
-            if (this.loadedCountDown > 0) {
-                $(this.el).addClass('loading');
-            } else {
-                $(this.el).removeClass('loading');
-            }
+            return this.loadedCountDown == 0;
         },
         
         close: function() {
