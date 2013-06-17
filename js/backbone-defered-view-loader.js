@@ -149,8 +149,11 @@
         },
         
         isLoaded: function (loaded) {
-            this.loadedCountDown += (loaded ? -1 : 1);
+            if (loaded == undefined) {
+        	return this.loadedCountDown == 0;
+            }
             
+            this.loadedCountDown += (loaded ? -1 : 1);
             if (this.loadedCountDown > 0) {
                 $(this.el).addClass('loading');
             } else {
