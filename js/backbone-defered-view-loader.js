@@ -162,9 +162,12 @@
         },
         
         close: function() {
+            if (typeof this.onPreClose == "function") {
+                this.onPreClose();
+            }
             this.remove();
             this.unbind();
-            if (this.onClose) {
+            if (typeof this.onClose == "function") {
                 this.onClose();
             }
         }
